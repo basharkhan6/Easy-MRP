@@ -2,6 +2,7 @@ package com.example.easymrp.controller;
 
 import com.example.easymrp.model.auth.AuthUser;
 import com.example.easymrp.service.auth.RoleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ public class TestController {
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "jwt-token")
     public String userAccess(Authentication authentication) {
         AuthUser authUser = (AuthUser) authentication.getPrincipal();
         return "User Content.";
