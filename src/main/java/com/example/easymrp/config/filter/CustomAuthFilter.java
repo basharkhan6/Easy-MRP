@@ -4,6 +4,7 @@ import com.example.easymrp.model.dto.LoginRequest;
 import com.example.easymrp.utils.jwt.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -29,13 +30,14 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+        if (!req.getMethod().equalsIgnoreCase("POST")) throw new AuthenticationServiceException("Authentication method not supported!!");
         try {
             LoginRequest loginRequest = new ObjectMapper().readValue(req.getInputStream(), LoginRequest.class);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword(), List.of());
             return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AuthenticationServiceException("Error in binding login data");
         }
     }
 

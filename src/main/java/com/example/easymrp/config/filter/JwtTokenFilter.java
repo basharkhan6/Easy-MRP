@@ -75,7 +75,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             response.setContentType("application/json");
         } catch (IOException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
